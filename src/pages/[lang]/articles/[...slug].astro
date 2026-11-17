@@ -1,0 +1,41 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import { render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { formatDate, isoDate, localePath, useTranslations } from '../../../i18n/utils';
+import { getArticles } from '../../../lib/articles';
+
+export const getStaticPaths = (async () => {
+  const articles = await getArticles();
+  return articles.map(({ entry, lang, slug }) => ({
+    params: { lang, slug },
+    props: {
+      entry,
+      lang,
+      slug,
+      // The same file name in another language folder is a translation.
+      translations: articles.filter((other) => other.slug === slug).map((other) => other.lang),
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { entry, lang, slug, translations } = Astro.props;
+const { Content } = await render(entry);
+const { title, description, date, updated } = entry.data;
+const t = useTranslations(lang);
+---
+
+<BaseLayout lang={lang} path={`articles/${slug}`} title={title} description={description} translations={translations}>
+  <article>
+    <header class="article-header">
+      <h1>{title}</h1>
+      <p class="muted small"><time datetime={isoDate(date)}>{formatDate(date, lang)}</time>{updated && <> · {t('articles.updated')} <time datetime={isoDate(updated)}>{formatDate(updated, lang)}</time></>}</p>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+  <p class="back"><a href={localePath(lang, 'articles')}>← {t('articles.back')}</a></p>
+</BaseLayout>

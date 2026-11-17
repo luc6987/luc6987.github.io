@@ -1,0 +1,14 @@
+---
+interface Props {
+  /** Label → URL, e.g. { PDF: 'https://…', Code: 'https://…' }. */
+  links?: Record<string, string>;
+}
+
+const entries = Object.entries(Astro.props.links ?? {});
+---
+
+{entries.length > 0 && (
+  <ul class="inline-list links">
+    {entries.map(([label, href]) => <li><a href={href}>{label}</a></li>)}
+  </ul>
+)}

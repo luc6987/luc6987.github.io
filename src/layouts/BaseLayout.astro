@@ -1,0 +1,45 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import { htmlLang, langs, localePath, localize, useTranslations, type Lang } from '../i18n/utils';
+import { SITE } from '../site.config';
+
+interface Props {
+  lang: Lang;
+  /** Page title; your name is appended. Omit on the home page. */
+  title?: string;
+  description?: string;
+  /** Language-independent path of this page, e.g. 'research' or 'articles/hello-world' ('' = home). */
+  path: string;
+  /** Languages this page exists in (default: all). */
+  translations?: Lang[];
+}
+
+const { lang, title, description, path, translations = langs } = Astro.props;
+const t = useTranslations(lang);
+const name = localize(SITE.name, lang);
+const absolute = (l: Lang) => new URL(localePath(l, path), Astro.site);
+---
+
+<!doctype html>
+<html lang={htmlLang[lang]}>
+  <head>
+    <BaseHead
+      title={title ? `${title} · ${name}` : name}
+      description={description ?? localize(SITE.description, lang)}
+      canonical={absolute(lang)}
+    >
+      {translations.map((l) => <link rel="alternate" hreflang={htmlLang[l]} href={absolute(l)} />)}
+    </BaseHead>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t('skip')}</a>
+    <Header lang={lang} path={path} translations={translations} />
+    <main id="main" class="container">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="container">© {new Date().getFullYear()} {name}</div>
+    </footer>
+  </body>
+</html>

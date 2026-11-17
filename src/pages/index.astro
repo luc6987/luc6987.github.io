@@ -1,0 +1,35 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import { defaultLang, htmlLang, languages, langs, localePath, localize } from '../i18n/utils';
+import { SITE } from '../site.config';
+
+// `/` has no content of its own: it sends visitors to /en/, /zh/ or /fr/.
+const targets = Object.fromEntries(langs.map((l) => [l, localePath(l)]));
+const fallback = localePath(defaultLang);
+const name = localize(SITE.name, defaultLang);
+---
+
+<!doctype html>
+<html lang={htmlLang[defaultLang]}>
+  <head>
+    <BaseHead title={name} description={localize(SITE.description, defaultLang)}>
+      {langs.map((l) => <link rel="alternate" hreflang={htmlLang[l]} href={new URL(localePath(l), Astro.site)} />)}
+      <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site)} />
+      <script is:inline define:vars={{ targets, fallback }}>
+        // First browser language the site supports (zh-TW → zh, fr-CA → fr), otherwise the default.
+        const wanted = (navigator.languages || [navigator.language]).map((l) => l.toLowerCase().split('-')[0]);
+        const match = wanted.find((l) => Object.hasOwn(targets, l));
+        location.replace(match ? targets[match] : fallback);
+      </script>
+      <noscript><meta http-equiv="refresh" content={`0; url=${fallback}`} /></noscript>
+    </BaseHead>
+  </head>
+  <body>
+    <main class="container">
+      <h1>{name}</h1>
+      <ul class="inline-list">
+        {langs.map((l) => <li><a href={localePath(l)} hreflang={htmlLang[l]} lang={htmlLang[l]}>{languages[l]}</a></li>)}
+      </ul>
+    </main>
+  </body>
+</html>

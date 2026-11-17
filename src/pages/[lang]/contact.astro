@@ -1,0 +1,26 @@
+---
+import ProfileLinks from '../../components/ProfileLinks.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { langStaticPaths, localize, useTranslations, type Lang } from '../../i18n/utils';
+import { SITE } from '../../site.config';
+
+export function getStaticPaths() {
+  return langStaticPaths();
+}
+
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+---
+
+<BaseLayout lang={lang} path="contact" title={t('contact.title')}>
+  <h1>{t('contact.title')}</h1>
+  <p>{t('contact.intro')}</p>
+  <dl class="facts">
+    <dt>{t('contact.email')}</dt>
+    <dd><a href={`mailto:${SITE.email}`}>{SITE.email}</a></dd>
+    <dt>{t('contact.address')}</dt>
+    <dd class="address">{localize(SITE.address, lang)}</dd>
+    <dt>{t('contact.links')}</dt>
+    <dd><ProfileLinks /></dd>
+  </dl>
+</BaseLayout>

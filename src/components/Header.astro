@@ -1,0 +1,66 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+import { htmlLang, langLabels, languages, langs, localePath, localize, useTranslations, type Lang } from '../i18n/utils';
+import { SITE } from '../site.config';
+
+interface Props {
+  lang: Lang;
+  /** Language-independent path of the current page ('' = home). */
+  path: string;
+  /** Languages the current page exists in. */
+  translations: Lang[];
+}
+
+const { lang, path, translations } = Astro.props;
+const t = useTranslations(lang);
+const segments = path.split('/').filter(Boolean);
+const section = segments[0] ?? '';
+// Where the language switcher goes when this page has no translation (e.g. article → article list).
+const parent = segments.slice(0, -1).join('/');
+
+const nav = [
+  { path: '', label: t('nav.about') },
+  { path: 'research', label: t('nav.research') },
+  { path: 'articles', label: t('nav.articles') },
+  { path: 'cv', label: t('nav.cv') },
+  { path: 'contact', label: t('nav.contact') },
+];
+---
+
+<header class="site-header">
+  <div class="container">
+    <div class="header-top">
+      <a class="site-name" href={localePath(lang)}>{localize(SITE.name, lang)}</a>
+      <div class="header-tools">
+        <nav aria-label={t('lang.label')}>
+          <ul class="lang-switch">
+            {langs.map((l) => (
+              <li>
+                <a
+                  href={localePath(l, translations.includes(l) ? path : parent)}
+                  hreflang={htmlLang[l]}
+                  lang={htmlLang[l]}
+                  aria-label={languages[l]}
+                  aria-current={l === lang ? 'true' : undefined}
+                >{langLabels[l]}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <ThemeToggle label={t('theme.toggle')} />
+      </div>
+    </div>
+    <nav class="site-nav" aria-label={t('nav.label')}>
+      <ul>
+        {nav.map((item) => (
+          <li>
+            <a
+              href={localePath(lang, item.path)}
+              aria-current={item.path === path ? 'page' : item.path === section ? 'true' : undefined}
+            >{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>

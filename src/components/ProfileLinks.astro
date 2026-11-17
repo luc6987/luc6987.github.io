@@ -1,0 +1,15 @@
+---
+import { SITE } from '../site.config';
+
+interface Props {
+  /** Put the email address first. */
+  withEmail?: boolean;
+}
+
+const { withEmail = false } = Astro.props;
+---
+
+<ul class="inline-list profile-links">
+  {withEmail && <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>}
+  {SITE.links.map(({ label, href }) => <li><a href={href}>{label}</a></li>)}
+</ul>

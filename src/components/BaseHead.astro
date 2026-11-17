@@ -1,0 +1,41 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Absolute URL of this page; omitted on the redirect and 404 pages. */
+  canonical?: URL;
+}
+
+const { title, description, canonical } = Astro.props;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+{description && <meta name="description" content={description} />}
+{canonical && <link rel="canonical" href={canonical} />}
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+{description && <meta property="og:description" content={description} />}
+{canonical && <meta property="og:url" content={canonical} />}
+<script is:inline>
+  // Runs before first paint. A saved choice (theme toggle) wins, otherwise follow the OS.
+  (() => {
+    const root = document.documentElement;
+    const media = matchMedia('(prefers-color-scheme: dark)');
+    const apply = () => {
+      let saved = null;
+      try {
+        saved = localStorage.getItem('theme');
+      } catch {}
+      root.dataset.theme = saved === 'light' || saved === 'dark' ? saved : media.matches ? 'dark' : 'light';
+    };
+    apply();
+    media.addEventListener('change', apply);
+  })();
+</script>
+<slot />

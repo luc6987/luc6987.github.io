@@ -1,0 +1,498 @@
+/*
+ * All site styles live here (components have no <style> blocks).
+ *
+ * Theme: colours are tokens defined once with light-dark(). The inline script in
+ * BaseHead.astro sets <html data-theme="light|dark">, which fixes `color-scheme`;
+ * without JavaScript the browser follows the OS setting.
+ * Fonts: system fonts only, no web fonts (no third-party requests).
+ */
+
+:root {
+  color-scheme: light dark;
+
+  --bg: light-dark(#ffffff, #121417);
+  --surface: light-dark(#f4f5f7, #1c1f24);
+  --text: light-dark(#1f2328, #e2e4e8);
+  --muted: light-dark(#5c636d, #9ba2ac);
+  --border: light-dark(#e3e6ea, #2e333a);
+  --accent: light-dark(#1d4ed8, #8ab4f8);
+
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', 'Noto Sans SC',
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  --measure: 42rem;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+/* ---------- Base ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+body:lang(zh) {
+  line-height: 1.8;
+}
+
+main {
+  flex: 1;
+  padding-block: 2.5rem 4rem;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+h1 {
+  margin: 0 0 0.75rem;
+  font-size: 1.75rem;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  margin: 2.5rem 0 1rem;
+  font-size: 1.25rem;
+}
+
+h3 {
+  margin: 2rem 0 0.5rem;
+  font-size: 1.0625rem;
+}
+
+p,
+ul,
+ol,
+dl,
+blockquote,
+pre,
+table {
+  margin: 0 0 1rem;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 0.875rem;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 10;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+/* ---------- Header & footer ---------- */
+
+.site-header {
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header .container {
+  padding-block: 1.25rem 1rem;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.site-name {
+  color: var(--text);
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.header-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.lang-switch,
+.site-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lang-switch {
+  gap: 0.625rem;
+  font-size: 0.875rem;
+}
+
+.site-nav {
+  margin-top: 0.75rem;
+}
+
+.site-nav ul {
+  gap: 0.25rem 1.25rem;
+}
+
+.lang-switch a,
+.site-nav a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.lang-switch a:hover,
+.site-nav a:hover,
+.lang-switch a[aria-current],
+.site-nav a[aria-current] {
+  color: var(--text);
+}
+
+.lang-switch a[aria-current] {
+  font-weight: 600;
+}
+
+.site-nav a[aria-current] {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.45em;
+}
+
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  border-color: var(--muted);
+  color: var(--text);
+}
+
+.theme-toggle svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* No JavaScript → no data-theme → the toggle could not work, so hide it. */
+:root:not([data-theme]) .theme-toggle,
+:root[data-theme='dark'] .theme-toggle .icon-moon,
+:root:not([data-theme='dark']) .theme-toggle .icon-sun {
+  display: none;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.site-footer .container {
+  padding-block: 1.5rem;
+}
+
+/* ---------- About ---------- */
+
+.intro {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.intro-photo {
+  order: -1;
+  width: 160px;
+  height: 160px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.role {
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+}
+
+.intro .profile-links {
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 40rem) {
+  .intro {
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 2.5rem;
+  }
+
+  .intro-photo {
+    order: 0;
+  }
+}
+
+/* ---------- Lists of entries (publications, projects, articles) ---------- */
+
+.entries {
+  padding: 0;
+  list-style: none;
+}
+
+.entries > li {
+  padding-block: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.entries > li:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.entries p {
+  margin: 0.25rem 0 0;
+}
+
+.entries time {
+  display: block;
+}
+
+.entry-title {
+  font-weight: 600;
+}
+
+.entry-meta {
+  color: var(--muted);
+  font-size: 0.9375rem;
+  font-weight: 400;
+}
+
+.inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.links {
+  margin: 0.375rem 0 0;
+  font-size: 0.875rem;
+}
+
+/* ---------- CV & contact ---------- */
+
+.stack {
+  display: grid;
+  justify-items: start;
+  gap: 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.button:hover {
+  border-color: var(--accent);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.75rem 1.5rem;
+}
+
+.facts dt {
+  color: var(--muted);
+}
+
+.facts dd {
+  margin: 0;
+}
+
+.facts .inline-list {
+  margin: 0;
+}
+
+.address {
+  white-space: pre-line;
+}
+
+@media (max-width: 30rem) {
+  .facts {
+    grid-template-columns: 1fr;
+    gap: 0.125rem;
+  }
+
+  .facts dd {
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* ---------- Articles & Markdown ---------- */
+
+.article-header {
+  margin-bottom: 2rem;
+}
+
+.article-header h1 {
+  margin-bottom: 0.25rem;
+}
+
+.back {
+  margin-top: 3rem;
+}
+
+.prose > :last-child {
+  margin-bottom: 0;
+}
+
+.prose h2 {
+  margin-top: 2rem;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.4rem;
+}
+
+.prose li + li {
+  margin-top: 0.25rem;
+}
+
+.prose blockquote {
+  padding-left: 1rem;
+  border-left: 3px solid var(--border);
+  color: var(--muted);
+}
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+.prose :not(pre) > code {
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: var(--surface);
+}
+
+.prose pre {
+  padding: 1rem;
+  overflow-x: auto;
+  border-radius: 6px;
+  background: var(--surface);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+/* Syntax highlighting: Shiki emits both palettes as variables (astro.config.mjs). */
+.astro-code,
+.astro-code span {
+  color: light-dark(var(--shiki-light), var(--shiki-dark));
+  background-color: light-dark(var(--shiki-light-bg), var(--shiki-dark-bg));
+}
+
+.prose hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+.prose table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+.prose th,
+.prose td {
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.prose img {
+  border-radius: 6px;
+}

@@ -1,0 +1,53 @@
+---
+import { getCollection } from 'astro:content';
+import LinkList from '../../components/LinkList.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { langStaticPaths, localize, useTranslations, type Lang } from '../../i18n/utils';
+import { SITE } from '../../site.config';
+
+export function getStaticPaths() {
+  return langStaticPaths();
+}
+
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+// Newest first; entries from the same year keep their order in the YAML file.
+const publications = (await getCollection('publications')).sort((a, b) => b.data.year - a.data.year);
+const projects = await getCollection('projects');
+const isMe = (author: string) => SITE.highlightAuthors.includes(author);
+---
+
+<BaseLayout lang={lang} path="research" title={t('research.title')}>
+  <h1>{t('research.title')}</h1>
+
+  {publications.length > 0 && (
+    <section aria-labelledby="publications">
+      <h2 id="publications">{t('research.publications')}</h2>
+      <ul class="entries">
+        {publications.map(({ data: p }) => (
+          <li>
+            <div class="entry-title">{p.title}</div>
+            <div>{p.authors.map((author, i) => <>{i > 0 && ', '}{isMe(author) ? <strong>{author}</strong> : author}</>)}</div>
+            <div class="entry-meta"><em>{p.venue}</em>, {p.year}{p.note && <> · {localize(p.note, lang)}</>}</div>
+            <LinkList links={p.links} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {projects.length > 0 && (
+    <section aria-labelledby="projects">
+      <h2 id="projects">{t('research.projects')}</h2>
+      <ul class="entries">
+        {projects.map(({ data: p }) => (
+          <li>
+            <div class="entry-title">{localize(p.title, lang)}{p.period && <span class="entry-meta"> · {p.period}</span>}</div>
+            <p>{localize(p.description, lang)}</p>
+            <LinkList links={p.links} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</BaseLayout>

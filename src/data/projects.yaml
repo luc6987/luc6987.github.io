@@ -1,0 +1,22 @@
+# Projects, shown in this order.
+# title / description: one string, or one per language (en / zh / fr; en is the fallback)
+# period (optional), links (optional): label → URL
+- id: project-one
+  title:
+    en: Placeholder Project One
+    zh: 占位项目一
+    fr: Projet provisoire n° 1
+  period: "2025–2026"
+  description:
+    en: One or two sentences on what the project does, why it matters and what your role was.
+    zh: 用一两句话说明这个项目做什么、为什么重要，以及你负责的部分。
+    fr: Une ou deux phrases sur ce que fait le projet, pourquoi il compte et quel a été votre rôle.
+  links:
+    Code: "https://github.com/luc6987/project-one"
+
+- id: project-two
+  title: Placeholder Project Two
+  description:
+    en: A second placeholder project. Its title is a single string, used in every language.
+    zh: 第二个占位项目。它的标题只写了一个字符串，所有语言共用。
+    fr: Un second projet provisoire. Son titre est une seule chaîne, utilisée dans toutes les langues.

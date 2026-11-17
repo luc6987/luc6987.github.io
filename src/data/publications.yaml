@@ -1,0 +1,24 @@
+# Publications, shown newest year first (same-year entries keep this order).
+# id: unique · authors: names in src/site.config.ts `highlightAuthors` are shown in bold
+# note (optional): one string, or one per language (en / zh / fr)
+# links (optional): label → URL
+- id: placeholder-2026
+  title: "A Placeholder Title for a Conference Paper"
+  authors: ["Your Name", "Coauthor One", "Coauthor Two"]
+  venue: "Proceedings of the Placeholder Conference (PLC 2026)"
+  year: 2026
+  note:
+    en: Oral presentation
+    zh: 口头报告
+    fr: Présentation orale
+  links:
+    PDF: "https://example.com/paper.pdf"
+    Code: "https://github.com/luc6987/placeholder"
+
+- id: placeholder-2025
+  title: "Another Placeholder Title: A Journal Article"
+  authors: ["Coauthor One", "Your Name"]
+  venue: "Journal of Placeholder Studies"
+  year: 2025
+  links:
+    DOI: "https://doi.org/10.0000/placeholder"

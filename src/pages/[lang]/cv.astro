@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { htmlLang, langStaticPaths, languages, useTranslations, type Lang } from '../../i18n/utils';
+import { SITE } from '../../site.config';
+
+export function getStaticPaths() {
+  return langStaticPaths();
+}
+
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+// The CV in the page's language (if there is one) comes first.
+const files = [...SITE.cv].sort((a, b) => Number(b.lang === lang) - Number(a.lang === lang));
+---
+
+<BaseLayout lang={lang} path="cv" title={t('cv.title')}>
+  <h1>{t('cv.title')}</h1>
+  <p>{t('cv.intro')}</p>
+  <ul class="stack">
+    {files.map((file) => (
+      <li>
+        <a class="button" href={file.href} hreflang={htmlLang[file.lang]} type="application/pdf">{t('cv.download').replace('{lang}', languages[file.lang])}</a>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>

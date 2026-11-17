@@ -1,0 +1,33 @@
+---
+import { Image } from 'astro:assets';
+import { getEntry, render } from 'astro:content';
+import ProfileLinks from '../../components/ProfileLinks.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { langStaticPaths, localize, type Lang } from '../../i18n/utils';
+import { SITE } from '../../site.config';
+
+export function getStaticPaths() {
+  return langStaticPaths();
+}
+
+const lang = Astro.params.lang as Lang;
+const about = await getEntry('about', lang);
+if (!about) throw new Error(`Missing src/content/about/${lang}.md`);
+const { Content } = await render(about);
+const { role, affiliation } = about.data;
+const name = localize(SITE.name, lang);
+---
+
+<BaseLayout lang={lang} path="">
+  <div class="intro">
+    <div>
+      <h1>{name}</h1>
+      <p class="role">{role}{affiliation && <><br />{affiliation}</>}</p>
+      <div class="prose">
+        <Content />
+      </div>
+      <ProfileLinks withEmail />
+    </div>
+    <Image class="intro-photo" src={SITE.photo} alt={name} width={160} height={160} densities={[1, 2]} loading="eager" />
+  </div>
+</BaseLayout>

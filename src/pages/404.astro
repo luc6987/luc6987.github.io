@@ -1,0 +1,23 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import { defaultLang, htmlLang, langs, localePath, ui } from '../i18n/utils';
+
+// GitHub Pages serves this for every unknown URL, in any language, so it speaks all three.
+---
+
+<!doctype html>
+<html lang={htmlLang[defaultLang]}>
+  <head>
+    <BaseHead title={`404 · ${ui[defaultLang]['notFound.text']}`}>
+      <meta name="robots" content="noindex" />
+    </BaseHead>
+  </head>
+  <body>
+    <main class="container">
+      <h1>404</h1>
+      <ul class="stack">
+        {langs.map((l) => <li lang={htmlLang[l]}>{ui[l]['notFound.text']} <a href={localePath(l)}>{ui[l]['notFound.back']}</a></li>)}
+      </ul>
+    </main>
+  </body>
+</html>
